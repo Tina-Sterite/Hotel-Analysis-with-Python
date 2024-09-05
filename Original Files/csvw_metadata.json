@@ -1,0 +1,44 @@
+{
+  "@context": "http://www.w3.org/ns/csvw",
+  "tables": [
+    {
+      "url": "Customer.csv"
+    },
+    {
+      "url": "Product.csv"
+    },
+    {
+      "url": "SupportTicket.csv"
+    },
+    {
+      "url": "Interaction.csv"
+    },
+    {
+      "url": "CustomerHealthScore.csv"
+    },
+    {
+      "url": "RenewalDates.csv"
+    },
+    {
+      "url": "BillingInformation.csv"
+    },
+    {
+      "url": "OnboardingStatus.csv"
+    },
+    {
+      "url": "UpsellOpportunities.csv"
+    },
+    {
+      "url": "ProductUsage.csv"
+    },
+    {
+      "url": "Feedback.csv"
+    },
+    {
+      "url": "ChurnRisk.csv"
+    },
+    {
+      "url": "Contact.csv"
+    }
+  ]
+}

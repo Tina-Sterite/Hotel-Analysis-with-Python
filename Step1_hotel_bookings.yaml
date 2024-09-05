@@ -1,0 +1,296 @@
+- object: lodging
+  count: 397  # Number of lodging options to generate
+  fields:
+    lodging_id: ${{unique_id}}  # Unique ID for each lodging
+    name:
+      fake: company
+    address:
+      fake: StreetAddress
+    city:
+      fake: city
+    state:
+      fake: state
+    country: USA
+      #value: USA
+    zipcode:
+      fake: postalcode
+    phonenumber:
+      fake: phone_number
+    email: 
+      fake: email
+      #template: "{{Name|slug}}@example.com"
+    type:
+      random_choice:
+        Bed & Breakfast: 6
+        Lodge: 15
+        Inn: 8
+        Motel: 5
+        Hotel: 43
+        Resort: 23
+    location:
+      if:
+        - choice:
+            when: ${{type == "Lodge"}}
+            pick:
+              random_choice:
+                Mountains: 90
+                Downtown: 10
+        - choice:
+            when: ${{type == "Resort"}}
+            pick:
+              random_choice:
+                Water Front: 90
+                Downtown: 10
+        - choice:
+            pick:
+              random_choice:
+                - Downtown
+                - Airport
+                - Country
+                - Water Front
+                - Mountains
+    number_of_rooms:
+      if:
+        - choice:
+            when: ${{type == "Bed & Breakfast"}}
+            pick:
+              random_number:
+                min: 1
+                max: 5
+        - choice:
+            when: ${{type == "Inn"}}
+            pick:
+              random_number:
+                min: 6
+                max: 15
+        - choice:
+            when: ${{type == "Motel"}}
+            pick:
+              random_number:
+                min: 16
+                max: 45
+        - choice:
+            when: ${{type == "Lodge"}}
+            pick:
+              random_number:
+                min: 46
+                max: 140
+        - choice:
+            when: ${{type == "Hotel"}}
+            pick:
+              random_number:
+                min: 141
+                max: 300
+        - choice:
+            when: ${{type == "Resort"}}
+            pick:
+              random_number:
+                min: 301
+                max: 600
+    amenities:
+      if:
+        - choice:
+            when: ${{type == "Resort"}}
+            pick: 'Spa, Beach Access, Restaurant'
+        - choice:
+            when: ${{type == "Lodge"}}
+            pick: 'Room Service, Bar, Meeting Rooms'
+        - choice: 
+            pick:
+              random_choice:
+                - 'Pool, Gym, Free WiFi'
+                - 'Free Breakfast, Parking, Pet Friendly'
+                - 'Laundry Service, Airport Shuttle, Concierge'
+
+- object: inventory
+  count: 365
+  fields:
+    lodging_id:
+      random_reference: 
+        to: lodging
+    inventory_date:
+      date_between:
+        start_date: today
+        end_date: +365d
+    room_type:
+      random_choice:
+        - Single
+        - Double
+        - Suite
+        - Family Room
+    total_rooms: ${{lodging.number_of_rooms}}
+    available_rooms:
+      random_number:
+        min: 0
+        max: ${{total_rooms}}
+    booked_rooms: ${{total_rooms - available_rooms}}
+- object: pricing
+  count: 1588
+  fields:
+    lodging_id:
+      random_reference: 
+        to: lodging
+    room_type: ${{inventory.room_type}}
+    base_price:
+      random_number:
+        min: 50
+        max: 1000
+    high_season_multiplier:
+      random_choice:
+        - .5
+        - 1.0
+        - 1.5
+        - 2.0
+        - 2.5
+
+- object: customer
+  count: 1245
+  fields:
+    customer_id: ${{unique_id}} # Unique ID for each customer
+    first_name:
+      fake: FirstName
+    last_name:
+      fake: LastName
+    address:
+      fake: StreetAddress
+    city:
+      fake: city
+    state:
+      fake: state
+    zipcode:
+      fake: postalcode
+    country: USA
+    phonenumber:
+      fake: phone_number
+    email:
+      fake: email
+    referred_by:
+      random_choice:
+        - Friend
+        - Employee
+        - Social Media Ad
+        - Email Campaign
+        - Internet Search
+        - Magazine Ad
+        - Television Ad
+        - Travel Site
+    passport_number:
+      fake: ssn
+    total_reservations:
+      random_number:
+        min: 1
+        max: 20
+    total_cancellations:
+      random_number:
+        min: 0
+        max: ${{int(total_reservations)}}
+    total_actual_stays: ${{total_reservations - total_cancellations}}
+
+- object: reservations
+  count: 7149
+  fields:
+    reservation_id: ${{unique_id}}  # Unique ID for each reservation
+    customer_id:
+      random_reference: 
+        to: customer
+    lodging_id:
+      random_reference: 
+        to: lodging
+    booking_date:
+      date_between:
+        start_date: -365d
+        end_date: today
+    reservation_status:
+      random_choice:
+        - Reserved
+        - Paid
+        - Cancelled
+    cancellation_penalty:
+      random_choice:
+        - 0.0
+        - 0.5
+        - 1.0
+    number_of_nights:
+      random_number:
+        min: 1
+        max: 6
+    start_date:
+      date_between:
+        start_date: today
+        end_date: +730d
+    end_date: ${{start_date + relativedelta(days=number_of_nights)}}  # End date is start date + number of nights
+    season:
+      random_choice:
+        - High
+        - Low
+    number_of_adults:
+      random_number:
+        min: 1
+        max: 4
+    number_of_children:
+      random_number:
+        min: 0
+        max: 3
+    number_of_babies:
+      random_number:
+        min: 0
+        max: 2
+    meal_included:
+      random_choice:
+        - BB  # Bed and Breakfast
+        - FB  # Full Board
+        - HB  # Half Board
+        - SC  # Self Catering
+    market_segment:
+      random_choice:
+        - Aviation
+        - Complementary
+        - Corporate
+        - Direct
+        - Groups
+        - Offline TA/TO
+        - Online TA
+    campaign_type:
+      random_choice:
+        - Social Media Ad
+        - Email Campaign
+        - Internet Search
+        - Magazine Ad
+        - Television Ad
+        - Travel Site
+    reserved_room_type:
+      if:
+        - choice:
+            when: ${{lodging.type in ["Motel", "Inn", "Bed & Breakfast"]}}
+            pick: 
+              random_choice:
+                Single: 10
+                Double: 90
+        - choice:
+            pick:
+              random_choice:
+                Single: 20
+                Double: 45
+                Suite: 15
+                Family Room: 20
+    assigned_room_type:
+      if:
+        - choice:
+            when: ${{lodging.type in ["Hotel", "Resort"] and customer.total_actual_stays > 3}}
+            pick:
+              random_choice:
+                Suite: 10
+                ${{reserved_room_type}}: 90
+        - choice:
+            pick: ${{reserved_room_type}}
+    room_number:
+      random_number:
+        min: 1
+        max: ${{int(lodging.number_of_rooms)}}
+    total_amount: 
+      if:
+        - choice:
+            when: ${{season == "High"}}
+            pick: ${{pricing.base_price * number_of_nights * pricing.high_season_multiplier}}
+        - choice:
+            pick: ${{pricing.base_price * number_of_nights}}

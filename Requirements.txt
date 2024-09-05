@@ -1,0 +1,11 @@
+#****** Requirements: ******
+
+#****** Create and activate the conda environment: ******
+conda create -n dataprep_viz -c conda-forge python conda pandas pip pykernel
+conda activate dataprep_viz
+
+#****** Install the addition libraries: ******
+#** adding plotly in an attempt to replace the matplotlib components with a more interactive components
+conda install -c conda-forge plotly seaborn matplotlib scikit-learn kaggle psycopg2
+
+pip install snowfakery
