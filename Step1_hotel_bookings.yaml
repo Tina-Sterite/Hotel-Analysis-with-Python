@@ -1,7 +1,8 @@
 - object: lodging
   count: 397  # Number of lodging options to generate
   fields:
-    lodging_id: ${{unique_id}}  # Unique ID for each lodging
+#    lodging_id: #${{unique_id}}  # Unique ID for each lodging
+#      fake: uuid4
     name:
       fake: company
     address:
@@ -30,13 +31,13 @@
     location:
       if:
         - choice:
-            when: ${{type == "Lodge"}}
+            when: ${{type == 'Lodge'}}
             pick:
               random_choice:
                 Mountains: 90
                 Downtown: 10
         - choice:
-            when: ${{type == "Resort"}}
+            when: ${{type == 'Resort'}}
             pick:
               random_choice:
                 Water Front: 90
@@ -52,37 +53,37 @@
     number_of_rooms:
       if:
         - choice:
-            when: ${{type == "Bed & Breakfast"}}
+            when: ${{type == 'Bed & Breakfast'}}
             pick:
               random_number:
                 min: 1
                 max: 5
         - choice:
-            when: ${{type == "Inn"}}
+            when: ${{type == 'Inn'}}
             pick:
               random_number:
                 min: 6
                 max: 15
         - choice:
-            when: ${{type == "Motel"}}
+            when: ${{type == 'Motel'}}
             pick:
               random_number:
                 min: 16
                 max: 45
         - choice:
-            when: ${{type == "Lodge"}}
+            when: ${{type == 'Lodge'}}
             pick:
               random_number:
                 min: 46
                 max: 140
         - choice:
-            when: ${{type == "Hotel"}}
+            when: ${{type == 'Hotel'}}
             pick:
               random_number:
                 min: 141
                 max: 300
         - choice:
-            when: ${{type == "Resort"}}
+            when: ${{type == 'Resort'}}
             pick:
               random_number:
                 min: 301
@@ -90,10 +91,10 @@
     amenities:
       if:
         - choice:
-            when: ${{type == "Resort"}}
+            when: ${{type == 'Resort'}}
             pick: 'Spa, Beach Access, Restaurant'
         - choice:
-            when: ${{type == "Lodge"}}
+            when: ${{type == 'Lodge'}}
             pick: 'Room Service, Bar, Meeting Rooms'
         - choice: 
             pick:
@@ -146,7 +147,8 @@
 - object: customer
   count: 1245
   fields:
-    customer_id: ${{unique_id}} # Unique ID for each customer
+#    customer_id: #${{unique_id}} # Unique ID for each customer
+#      fake: uuid4
     first_name:
       fake: FirstName
     last_name:
@@ -189,7 +191,8 @@
 - object: reservations
   count: 7149
   fields:
-    reservation_id: ${{unique_id}}  # Unique ID for each reservation
+   # reservation_id: #${{unique_id}}  # Unique ID for each reservation
+   #   fake: uuid4
     customer_id:
       random_reference: 
         to: customer
@@ -213,7 +216,7 @@
     number_of_nights:
       random_number:
         min: 1
-        max: 6
+        max: 12
     start_date:
       date_between:
         start_date: today
@@ -261,7 +264,7 @@
     reserved_room_type:
       if:
         - choice:
-            when: ${{lodging.type in ["Motel", "Inn", "Bed & Breakfast"]}}
+            when: ${{lodging.type in ('Motel', 'Inn', 'Bed & Breakfast')}}
             pick: 
               random_choice:
                 Single: 10
@@ -276,7 +279,7 @@
     assigned_room_type:
       if:
         - choice:
-            when: ${{lodging.type in ["Hotel", "Resort"] and customer.total_actual_stays > 3}}
+            when: ${{(lodging.type in ('Hotel', 'Resort')) and (reservation_status!='Cancelled') and (customer.total_actual_stays > 3) and (number_of_nights>1)}}
             pick:
               random_choice:
                 Suite: 10

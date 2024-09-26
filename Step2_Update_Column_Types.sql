@@ -1,11 +1,9 @@
 ALTER TABLE customer
-ALTER COLUMN customer_id TYPE NUMERIC(12,0) USING customer_id::NUMERIC,
 ALTER COLUMN total_reservations TYPE INTEGER USING total_reservations::INTEGER,
 ALTER COLUMN total_cancellations TYPE INTEGER USING total_cancellations::INTEGER,
 ALTER COLUMN total_actual_stays TYPE INTEGER USING total_actual_stays::INTEGER;
 
 ALTER TABLE lodging
-ALTER COLUMN lodging_id TYPE NUMERIC(12,0) USING lodging_id::NUMERIC,
 ALTER COLUMN number_of_rooms TYPE INTEGER USING number_of_rooms::INTEGER;
 
 ALTER TABLE inventory
@@ -16,7 +14,6 @@ ALTER COLUMN available_rooms TYPE INTEGER USING available_rooms::INTEGER,
 ALTER COLUMN booked_rooms TYPE INTEGER USING booked_rooms::INTEGER;
 
 ALTER TABLE reservations
-ALTER COLUMN reservation_id TYPE NUMERIC(12,0) USING reservation_id::NUMERIC,
 ALTER COLUMN customer_id TYPE NUMERIC(12,0) USING customer_id::NUMERIC,
 ALTER COLUMN lodging_id TYPE NUMERIC(12,0) USING lodging_id::NUMERIC,
 ALTER COLUMN booking_date TYPE DATE USING booking_date::DATE,
